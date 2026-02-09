@@ -7,7 +7,7 @@ export async function onRequestPost({ request, env }) {
       {
         method: "POST",
         headers: {
-          "Authorization": Bearer ${env.OPENROUTER_API_KEY},
+          "Authorization": `Bearer ${env.OPENROUTER_API_KEY},
           "Content-Type": "application/json",
           "HTTP-Referer": "https://harizons.ai",
           "X-Title": "Harizons AI"
