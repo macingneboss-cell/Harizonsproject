@@ -1,21 +1,37 @@
-
 export async function onRequestPost({ request, env }) {
-  const { messages } = await request.json()
+  try {
+    const { message } = await request.json();
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${env.OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://harizons.ai',
-      'X-Title': 'Harizons.ai'
-    },
-    body: JSON.stringify({
-      model: 'openai/gpt-4o-mini',
-      stream: true,
-      messages
-    })
-  })
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": Bearer ${env.OPENROUTER_API_KEY},
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://harizons.ai",
+          "X-Title": "Harizons AI"
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "Kamu adalah AI asisten yang ramah dan membantu." },
+            { role: "user", content: message }
+          ]
+        })
+      }
+    );
 
-  return new Response(res.body, { headers: { 'Content-Type': 'text/plain' } })
+    const data = await response.json();
+
+    return new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json" }
+    });
+
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500 }
+    );
+  }
 }
